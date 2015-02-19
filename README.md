@@ -28,7 +28,53 @@ The best alternative to Comrade right now is probably etcd. It works really well
 
 ##API
 
-@TODO
+This package contains two classes. `Member` and `Client`. `Member` reports one node's status to the rest of the cluster, and `Client` is used to get information about nodes in the cluster.
+
+##comrade.Member
+
+###new Member(options)
+
+- `options` a set of configurable options to set on the Member
+  - `role` (required) the role of this node (e.g. appserver, loadbalancer, etc.)
+  - `options.googleDataset` (required) a `gcloud` Dataset instance. See [gcloud-node](https://github.com/GoogleCloudPlatform/gcloud-node/)
+  - `options.googleDatasetNamespace` (optional) the GCD namespace. If not set, the default for the given dataset is used.
+  - `options.googleDatasetKind` (optional) the GCD kind to use. Defaults to `ComradeServer`
+  - `options.metadata` (optional) an object containing information about the server (IP, port, etc.)
+  
+By using different namespaces or kinds, you can separate nodes into different environments.
+
+###member.start()
+
+Every 10 seconds, updates the database to tell other comrades the server is running, and checks if it needs to exit.
+
+##comrade.Client
+
+###new Client(options)
+
+- `options` a set of configurable options to set on the Client
+  - `options.googleDataset` (required) a `gcloud` Dataset instance. See [gcloud-node](https://github.com/GoogleCloudPlatform/gcloud-node/).
+  - `options.googleDatasetNamespace` (optional) the GCD namespace. If not set, the default for the given dataset is used.
+  - `options.googleDatasetKind` (optional) the GCD kind to use. Defaults to `ComradeServer`
+  
+###getServers(options,callback)
+
+- `options` a set of configurable options
+  - `options.role` limit the results to contain only members with this a certain role. Fetches all members if undefined
+  - `options.alive` if `true`, returns servers that have not started shutting down yet. If `false`, returns servers that have received the signal to shutdown. If undefined, returns all members.
+- `callback` Function
+
+      client.getServers({
+        role: 'app',
+        alive: true
+      },function(err,entities){
+        /*
+          err: gcloud error or null if successful
+          entities: gcloud entities
+        */
+        entities.forEach(function(entity){
+          console.log(entity.metadata.ip+':'+entity.metadata.port)
+        })
+      })
 
 ##Examples
 
