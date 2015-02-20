@@ -66,13 +66,13 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
       client.getServers({
         role: 'app',
         alive: true
-      },function(err,entities){
+      },function(err,servers){
         /*
           err: gcloud error or null if successful
-          entities: gcloud entities
+          servers: array of server data
         */
-        entities.forEach(function(entity){
-          console.log(entity.metadata.ip+':'+entity.metadata.port)
+        servers.forEach(function(server){
+          console.log(server.metadata.ip+':'+server.metadata.port)
         })
       })
 
