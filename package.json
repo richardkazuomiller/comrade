@@ -10,6 +10,9 @@
   "author": "Richard Kazuo Miller",
   "license": "MIT",
   "dependencies": {
-    "uuid": "*"
+    "uuid": "2.0.1",
+    "queue": "3.0.10",
+    "cliff": "0.1.10",
+    "date-utils": "1.2.16"
   }
 }
