@@ -37,6 +37,7 @@ This package contains two classes. `Member` and `Client`. `Member` reports one n
 - `options` a set of configurable options to set on the Member
   - `role` (required) the role of this node (e.g. appserver, loadbalancer, etc.)
   - `options.googleDataset` (required) a `gcloud` Dataset instance. See [gcloud-node](https://github.com/GoogleCloudPlatform/gcloud-node/)
+  - `options.id` (optional) the unique ID of the member. If not set, a UUID is created.
   - `options.googleDatasetNamespace` (optional) the GCD namespace. If not set, the default for the given dataset is used.
   - `options.googleDatasetKind` (optional) the GCD kind to use. Defaults to `ComradeServer`
   - `options.metadata` (optional) an object containing information about the server (IP, port, etc.)
