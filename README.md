@@ -90,7 +90,7 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
           }
         })
   
-###client.getServers(options,callback)
+###client.getMembers(options,callback)
 
 - `options` a set of configurable options
   - `options.role` limit the results to contain only members with this a certain role.
@@ -99,7 +99,7 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
   - `options.stale` if `true`, return servers that have been dead or unhealthy for more than an hour. If `false`, returns servers that have not been dead or unhealthy for more than an hour.
 - `callback` Function
 
-      client.getServers({
+      client.getMembers({
         role: 'app',
         alive: true
       },function(err,servers){
@@ -112,20 +112,20 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
         })
       })
       
-###client.killServer(id,callback)
+###client.killMember(id,callback)
   - `id` the ID of the server to shut down.
   - `callback` Function
 
 Tells the specified server to start shutting down.
 
-###client.killOldestServer(options,callback)
+###client.killOldestMember(options,callback)
 
  - `options` configurable set of options (same as `client.getServer`)
  - `callback` Function
  
 Kills the server with the earliest creation date.
 
-###client.clearStaleServers(callback)
+###client.clearStaleMembers(callback)
  - `callback` Function
 
 Deletes entities for servers which have been dead or unhealthy from GCD. Run this periodically to lower the number of read operations when using the client.
