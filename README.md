@@ -58,37 +58,37 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
   - `options.googleDatasetKind` (optional) the GCD kind to use. Defaults to `ComradeServer`
   - `options.healthCheck` (optional) custom health check function to see if each server is healthy. If not set, checks if `member.updated` is less than 60 seconds in the past.
   
-        /*
-          This example uses the default GCD namespace and kind options, with a
-          custom health check that polls an endpoint on each member. If the 
-          member responds with the correct ID it is healthy.
-        */
-        var comrade = require('comrade')
-        var request = require('request')
-        var client = new comrade.Client({
-          googleDataset: require('./google-dataset'),
-          healthCheck: function(memberData,callback){
-            if(memberData.role == 'loadbalancer'){
-              var timediff = Date.now() - memberData.updated
-              callback(timediff < 60000)
+          /*
+            This example uses the default GCD namespace and kind options, with a
+            custom health check that polls an endpoint on each member. If the 
+            member responds with the correct ID it is healthy.
+          */
+          var comrade = require('comrade')
+          var request = require('request')
+          var client = new comrade.Client({
+            googleDataset: require('./google-dataset'),
+            healthCheck: function(memberData,callback){
+              if(memberData.role == 'loadbalancer'){
+                var timediff = Date.now() - memberData.updated
+                callback(timediff < 60000)
+              }
+              else{
+                var url = ['http://',memberData.metadata.ip,':',
+                  memberData.metadata.port,'/comrade_health_check'].join('')
+                request.get({
+                  url: url
+                },function(e,r,b){
+                  try{
+                    var data = JSON.parse(b)
+                    callback(!e && data.id == memberData.id)
+                  }
+                  catch(e){
+                    callback(false)
+                  }
+                })
+              }
             }
-            else{
-              var url = ['http://',memberData.metadata.ip,':',
-                memberData.metadata.port,'/comrade_health_check'].join('')
-              request.get({
-                url: url
-              },function(e,r,b){
-                try{
-                  var data = JSON.parse(b)
-                  callback(!e && data.id == memberData.id)
-                }
-                catch(e){
-                  callback(false)
-                }
-              })
-            }
-          }
-        })
+          })
   
 ###client.getMembers(options,callback)
 
@@ -99,18 +99,18 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
   - `options.stale` if `true`, return servers that have been dead or unhealthy for more than an hour. If `false`, returns servers that have not been dead or unhealthy for more than an hour.
 - `callback` Function
 
-      client.getMembers({
-        role: 'app',
-        alive: true
-      },function(err,servers){
-        /*
-          err: gcloud error or null if successful
-          servers: array of server data
-        */
-        servers.forEach(function(server){
-          console.log(server.metadata.ip+':'+server.metadata.port)
+        client.getMembers({
+          role: 'app',
+          alive: true
+        },function(err,servers){
+          /*
+            err: gcloud error or null if successful
+            servers: array of server data
+          */
+          servers.forEach(function(server){
+            console.log(server.metadata.ip+':'+server.metadata.port)
+          })
         })
-      })
       
 ###client.killMember(id,callback)
   - `id` the ID of the server to shut down.
