@@ -57,7 +57,7 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
   - `options.googleDatasetNamespace` (optional) the GCD namespace. If not set, the default for the given dataset is used.
   - `options.googleDatasetKind` (optional) the GCD kind to use. Defaults to `ComradeServer`
   
-###getServers(options,callback)
+###client.getServers(options,callback)
 
 - `options` a set of configurable options
   - `options.role` limit the results to contain only members with this a certain role.
