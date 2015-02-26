@@ -60,8 +60,10 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
 ###getServers(options,callback)
 
 - `options` a set of configurable options
-  - `options.role` limit the results to contain only members with this a certain role. Fetches all members if undefined
-  - `options.alive` if `true`, returns servers that have not started shutting down yet. If `false`, returns servers that have received the signal to shutdown. If undefined, returns all members.
+  - `options.role` limit the results to contain only members with this a certain role.
+  - `options.alive` if `true`, returns servers that have not started shutting down yet. If `false`, returns servers that have received the signal to shutdown.
+  - `options.healthy` if `true`, returns servers that have passed the health check. If `false`, returns servers that have failed the health check.
+  - `options.stale` if `true`, return servers that have been dead or unhealthy for more than an hour. If `false`, returns servers that have not been dead or unhealthy for more than an hour.
 - `callback` Function
 
       client.getServers({
