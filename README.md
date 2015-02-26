@@ -78,6 +78,24 @@ Every 10 seconds, updates the database to tell other comrades the server is runn
           console.log(server.metadata.ip+':'+server.metadata.port)
         })
       })
+      
+###client.killServer(id,callback)
+  - `id` the ID of the server to shut down.
+  - `callback` Function
+
+Tells the specified server to start shutting down.
+
+###client.killOldestServer(options,callback)
+
+ - `options` configurable set of options (same as `client.getServer`)
+ - `callback` Function
+ 
+Kills the server with the earliest creation date.
+
+###client.clearStaleServers(callback)
+ - `callback` Function
+
+Deletes entities for servers which have been dead or unhealthy from GCD. Run this periodically to lower the number of read operations when using the client.
 
 ##Examples
 
