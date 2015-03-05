@@ -44,6 +44,20 @@ This package contains two classes. `Member` and `Client`. `Member` reports one n
   
 By using different namespaces or kinds, you can separate nodes into different environments.
 
+        var http = require('http')
+        var Member = require('comrade').Member
+        var member = new Member({
+          googleDataset: require('./my-google-dataset'),
+          role: process.env.SERVER_ROLE,
+          metadata: {
+            ip: process.env.PUBLIC_IPV4,
+            port: process.env.LISTEN_PORT
+          }
+        })
+        var server = http.createServer(function(){/*do something*/})
+        server.listen(process.env.LISTEN_PORT)
+        member.start()
+
 ###member.start()
 
 Every 10 seconds, updates the database to tell other comrades the server is running, and checks if it needs to exit.
