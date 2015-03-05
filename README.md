@@ -48,6 +48,39 @@ By using different namespaces or kinds, you can separate nodes into different en
 
 Every 10 seconds, updates the database to tell other comrades the server is running, and checks if it needs to exit.
 
+
+###Event: 'shutdown'
+
+Emitted when the member has been told to shutdown.
+
+        var http = require('http')
+        var Member = require('comrade').Member
+        var member = new Member({
+          googleDataset: require('./my-google-dataset'),
+          role: process.env.SERVER_ROLE,
+          metadata: {
+            ip: process.env.PUBLIC_IPV4,
+            port: process.env.LISTEN_PORT
+          }
+        })
+        var server = http.createServer(function(){/*do something*/})
+        server.listen(process.env.LISTEN_PORT)
+        member.once('shutdown',function(){
+          console.log('Closing server in 30 seconds...')
+          setTimeout(function(){
+            var interval = setInterval(function(){
+              server.getConnections(function(err,connections){
+                console.log('Open connections: '+connections)
+              })
+            },1000)
+            server.close(function(){
+              clearInterval(interval)
+              console.log('Server closed')
+              cache.clear()
+            })
+          },30000)
+        })
+
 ##comrade.Client
 
 ###new Client(options)
