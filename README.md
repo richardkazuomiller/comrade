@@ -1,24 +1,24 @@
-#Comrade
+# Comrade
 
 This isn't done yet. The API will change in ways that will break stuff. If you use this, make sure you check the version before deploying to production.
 
-##What is Comrade?
+## What is Comrade?
 Comrade has the following features:
 - Enable Node.js services in a cluster to find each other by saving their configurations to a common database (currently Google Cloud Datastore. More to come soon).
 -  Enable Node.js servers to know when they should die and exit gracefully on their own.
 -  Allow administrators to deploy/kill/restart Node.js services without having to access the machine in which it is running.
 
-##Why?
+## Why?
 
 See the [Motivation](https://github.com/richardkazuomiller/comrade/wiki/Motivation) page in the wiki
 
-##API
+## API
 
 This package contains two classes. `Member` and `Client`. `Member` reports one node's status to the rest of the cluster, and `Client` is used to get information about nodes in the cluster.
 
-##comrade.Member
+## comrade.Member
 
-###new Member(options)
+### new Member(options)
 
 - `options` a set of configurable options to set on the Member
   - `role` (required) the role of this node (e.g. appserver, loadbalancer, etc.)
@@ -44,12 +44,12 @@ By using different namespaces or kinds, you can separate nodes into different en
         server.listen(process.env.LISTEN_PORT)
         member.start()
 
-###member.start()
+### member.start()
 
 Every 10 seconds, updates the database to tell other comrades the server is running, and checks if it needs to exit.
 
 
-###Event: 'shutdown'
+### Event: 'shutdown'
 
 Emitted when the member has been told to shutdown.
 
@@ -81,9 +81,9 @@ Emitted when the member has been told to shutdown.
           },30000)
         })
 
-##comrade.Client
+## comrade.Client
 
-###new Client(options)
+### new Client(options)
 
 - `options` a set of configurable options to set on the Client
   - `options.googleDataset` (required) a `gcloud` Dataset instance. See [gcloud-node](https://github.com/GoogleCloudPlatform/gcloud-node/).
@@ -123,7 +123,28 @@ Emitted when the member has been told to shutdown.
             }
           })
   
-###client.getMembers(options,callback)
+  - `options.roles` (optional) specify how members with certain roles should be treated. For example, set the minimum required number of servers to keep alive.
+  
+        new comrade.Client({
+          ...
+          roles: {
+            app: {
+              minMembers: 3 
+              /* when using killOldestMember, don't kill a server with role
+               "app" if there are not more than 3 servers. Default is 1. */
+            },
+            crawler: {
+              minMembers: 0
+              /* sometimes it's ok to have 0 healthy instances of a certain
+              role. For example if you have a server that scrapes a third party
+              website periodically, you don't need more than one machine doing
+              that, and it's ok if the single machine shuts down for a minute or
+              two. */
+            }
+          }
+        })
+  
+### client.getMembers(options,callback)
 
 - `options` a set of configurable options
   - `options.role` limit the results to contain only members with this a certain role.
