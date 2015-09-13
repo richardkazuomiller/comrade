@@ -1,6 +1,6 @@
 {
   "name": "comrade",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Find and control servers in a cluster via a common datastore",
   "main": "index.js",
   "scripts": {
